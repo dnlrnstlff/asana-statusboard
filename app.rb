@@ -9,6 +9,7 @@ require 'sinatra'
 require 'haml'
 require 'sass'
 
+$stdout.sync = true
 
 def asana(url)
   uri = URI.parse("https://app.asana.com/api/1.0/" + url)
