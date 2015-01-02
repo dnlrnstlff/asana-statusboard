@@ -19,7 +19,7 @@ def asana_data(api_key, path)
   header = {
     "Content-Type" => "application/json"
   }
-  req = Net::HTTP::Get.new(uri.path, header)
+  req = Net::HTTP::Get.new(uri.path + "?archived=false", header)
   req.basic_auth(api_key, '')
   return http.start { |http| http.request(req) }
 end
@@ -40,12 +40,10 @@ def asana_projects(api_key, workspace_id)
     end
 
     all_projects.each do |project|
-      r = asana_data(api_key, "projects/" + project.to_s)
-      rr = JSON.parse(r.body)
-      rrr = rr.fetch("data")
-      # if rrr.fetch("archived") == false
-        all_res.push(rrr)
-      # end
+      res = asana_data(api_key, "projects/" + project.to_s)
+      json = JSON.parse(res.body)
+      project = json.fetch("data")
+      all_res.push(project)
     end
     return all_res
   end
