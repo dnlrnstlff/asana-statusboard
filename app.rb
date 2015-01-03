@@ -6,10 +6,33 @@ require 'open-uri'
 require 'openssl'
 
 require 'sinatra'
-require 'haml'
-require 'sass'
 
 $stdout.sync = true
+
+STATUS_MAP = {
+  'queued' => 'queued',
+  'on hold' => 'queued',
+  'done' => 'done',
+  'to print' => 'done',
+  'waiting' => 'waiting',
+  'proofed' => 'waiting',
+  'comps sent' => 'waiting'
+}
+
+helpers do
+  def project_status(project)
+    notes = project.fetch("notes").downcase
+    if status_match = STATUS_MAP.detect { |k, v| notes.to_s.match(k) }
+      STATUS_MAP[status_match.first]
+    else
+      nil
+    end
+  end
+
+  def project_member(member)
+    member.fetch("name").split(' ').map { |n| n[0] }.join('')
+  end
+end
 
 def asana_data(api_key, path)
   uri = URI.parse("https://app.asana.com/api/1.0/" + path)
@@ -43,6 +66,7 @@ def asana_projects(api_key, workspace_id)
       res = asana_data(api_key, "projects/" + project.to_s)
       json = JSON.parse(res.body)
       project = json.fetch("data")
+      puts project
       all_res.push(project)
     end
     return all_res
@@ -53,5 +77,5 @@ get '/:api_key/:workspace_id' do
   api_key = params[:api_key]
   workspace_id = params[:workspace_id]
   @projects = asana_projects(api_key, workspace_id)
-  haml :index, :format => :html5
+  erb :index, :format => :html5
 end

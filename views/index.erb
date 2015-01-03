@@ -1,0 +1,22 @@
+<style>
+  .projectNotes { color: #aeb7bc; background-color: #222222; }
+  .projectNotes span { display: inline-block; }
+
+  .done { color: #ffffff; background-color: #00ba00; }
+  .waiting { color: #ffffff; background-color: #ffc600; }
+  .queued { color: #647076; }
+</style>
+
+<table>
+  <% @projects.each do |project| %>
+    <tr>
+      <td class="projectName <%= project_status(project) %>"><%= project.fetch("name") %></td>
+      <td class="projectNotes <%= project_status(project) %>"><%= project.fetch("notes") %></td>
+      <td class="projectMembers <%= project_status(project) %>">
+        <% project.fetch("members").each do |member| %>
+          <span><%= project_member(member) %></span>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
