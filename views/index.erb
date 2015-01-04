@@ -1,9 +1,9 @@
 <style>
-  .projectNotes span { display: inline-block; }
-
   .done { color: #ffffff; background-color: rgb(0, 186, 0); }
   .queued { color: #808080; background-color: rgb(255, 198, 0); }
   .waiting { color: #808080; background-color: rgb(252, 107, 0); }
+
+  .projectPersons .icon { min-width: 30px; height: 30px; vertical-align: middle; text-align: center; font-size: 20px; line-height: 30px; background-color: rgb(252, 88, 181); color: #808080; display: inline-block; border: 2px solid #808080; }
 </style>
 
 <table>
@@ -11,9 +11,9 @@
     <tr class="<%= project_status(project) %>">
       <td class="projectName"><%= project.fetch("name") %></td>
       <td class="projectNotes"><%= project.fetch("notes") %></td>
-      <td class="projectMembers">
+      <td class="projectPersons">
         <% project.fetch("members").each do |member| %>
-          <span><%= project_member(member) %></span>
+          <%= project_member_icon(member, @members) %>
         <% end %>
       </td>
     </tr>

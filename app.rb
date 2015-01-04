@@ -29,8 +29,27 @@ helpers do
     end
   end
 
-  def project_member(member)
-    member.fetch("name").split(' ').map { |n| n[0] }.join('')
+  def project_member(id, members)
+    members.find { |member| member.fetch("id").to_s == id.to_s }
+  end
+
+  def project_member_icon(member, members, size="60x60")
+    src = nil
+    name = member.fetch("name")
+
+    if member = project_member(member.fetch("id"), members)
+      name = member.fetch("name")
+
+      if photo = member.fetch("photo")
+        src = photo.fetch("image_#{size}")
+      end
+    end
+
+    if src
+      "<img class='icon' src='#{src}' alt='#{name}'>"
+    else
+      "<div class='icon'>#{name.split(' ').map { |n| n[0] }.join('') }</div>"
+    end
   end
 end
 
@@ -54,7 +73,7 @@ def asana_projects(api_key, workspace_id)
   res = asana_data(api_key, "workspaces/" + workspace_id + "/projects")
   body = JSON.parse(res.body)
 
-  if body['errors'] then
+  if body['errors']
     puts "Server returned an error: #{body['errors'][0]['message']}"
   else
     # put all project IDs in an array
@@ -66,10 +85,28 @@ def asana_projects(api_key, workspace_id)
       res = asana_data(api_key, "projects/" + project.to_s)
       json = JSON.parse(res.body)
       project = json.fetch("data")
-      puts project
       all_res.push(project)
     end
     return all_res
+  end
+end
+
+def asana_members(api_key, projects)
+  all_members = []
+  projects.each do |project|
+    project.fetch("members").each do |member|
+      res = asana_data(api_key, "users/" + member.fetch("id").to_s)
+      body = JSON.parse(res.body)
+
+      if body['errors']
+        puts "Server returned an error: #{body['errors'][0]['message']}"
+      else
+        puts body.fetch("data")
+        all_members.push(body.fetch("data"))
+      end
+    end
+
+    return all_members
   end
 end
 
@@ -77,5 +114,6 @@ get '/:api_key/:workspace_id' do
   api_key = params[:api_key]
   workspace_id = params[:workspace_id]
   @projects = asana_projects(api_key, workspace_id)
+  @members = asana_members(api_key, @projects)
   erb :index, :format => :html5
 end
