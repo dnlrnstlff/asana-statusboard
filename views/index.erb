@@ -1,14 +1,15 @@
 <style>
-  .done { color: #ffffff; background-color: rgb(0, 186, 0); }
-  .queued { color: #808080; background-color: rgb(255, 198, 0); }
-  .waiting { color: #808080; background-color: rgb(252, 107, 0); }
-
-  .projectPersons .icon { min-width: 30px; height: 30px; vertical-align: middle; text-align: center; font-size: 20px; line-height: 30px; background-color: rgb(252, 88, 181); color: #808080; display: inline-block; border: 2px solid #808080; }
+  .projectPersons .icon { min-width: 30px; height: 30px; vertical-align: middle; text-align: center; font-size: 20px; line-height: 30px; background-color: rgb(252, 88, 181); color: #808080; display: inline-block; border-radius: 5px; }
+  .projectStatus .icon { border-radius: 50px; display: block; height: 20px; margin: 4px auto 0; width: 20px; background-color: rgb(174, 183, 188); box-shadow: 0 0 10px rgb(174, 183, 188); }
+  .projectStatus .icon.done { background-color: rgb(0, 186, 0); box-shadow: 0 0 10px rgb(0, 186, 0); }
+  .projectStatus .icon.queued { background-color: rgb(0, 108, 230); box-shadow: 0 0 10px rgb(0, 108, 230); }
+  .projectStatus .icon.waiting { background-color: rgb(252, 107, 0); box-shadow: 0 0 10px rgb(252, 107, 0); }
 </style>
 
 <table>
   <% @projects.each do |project| %>
     <tr class="<%= project_status(project) %>">
+      <td class="projectStatus"><span class="icon <%= project_status(project) %>"></span></td>
       <td class="projectName"><%= project.fetch("name") %></td>
       <td class="projectNotes"><%= project.fetch("notes") %></td>
       <td class="projectPersons">
