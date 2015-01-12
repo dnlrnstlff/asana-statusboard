@@ -101,7 +101,6 @@ def asana_members(api_key, projects)
       if body['errors']
         puts "Server returned an error: #{body['errors'][0]['message']}"
       else
-        puts body.fetch("data")
         all_members.push(body.fetch("data"))
       end
     end
