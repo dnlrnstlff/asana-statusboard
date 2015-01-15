@@ -6,12 +6,12 @@ Asana Statusboard
 How it works
 ------------
 
-The app grabs all projects from a specific workspace id and their project description. We treat the description as the overall status of the project. The app color codes the project based on keywords found in the description. Archived projects are visually subdued and always displayed at the bottom of the list.
+The app grabs all projects from a specific workspace id and their project description. We treat the description as the overall status of the project. The app color codes the project based on keywords found in the description.
 
 **Current Keywords:** queued, on hold, done, to print, waiting, proofed, comps sent
 
 Setup
-----
+-----
 
     git clone https://github.com/sheck/asana-statusboard.git
     cd asana-statusboard
